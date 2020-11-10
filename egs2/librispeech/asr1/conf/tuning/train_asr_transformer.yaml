@@ -1,6 +1,6 @@
 batch_type: numel
 batch_bins: 16000000
-accum_grad: 4
+accum_grad: 16
 max_epoch: 200
 patience: none
 # The initialization method for model parameters

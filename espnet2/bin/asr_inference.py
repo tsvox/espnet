@@ -53,6 +53,7 @@ class Speech2Text:
         lm_train_config: Union[Path, str] = None,
         lm_file: Union[Path, str] = None,
         token_type: str = None,
+        g2p_type: str = "g2p_en",
         bpemodel: str = None,
         device: str = "cpu",
         maxlenratio: float = 0.0,
@@ -143,7 +144,7 @@ class Speech2Text:
             else:
                 tokenizer = None
         else:
-            tokenizer = build_tokenizer(token_type=token_type)
+            tokenizer = build_tokenizer(token_type=token_type, g2p_type=g2p_type)
         converter = TokenIDConverter(token_list=token_list)
         logging.info(f"Text tokenizer: {tokenizer}")
 
@@ -419,7 +420,7 @@ def get_parser():
         "--token_type",
         type=str_or_none,
         default=None,
-        choices=["char", "bpe", None],
+        choices=["char", "bpe", "phn", None],
         help="The token type for ASR model. "
         "If not given, refers from the training args",
     )
@@ -430,6 +431,7 @@ def get_parser():
         help="The model path of sentencepiece. "
         "If not given, refers from the training args",
     )
+  
 
     return parser
 

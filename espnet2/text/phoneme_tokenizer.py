@@ -142,6 +142,7 @@ class PhonemeTokenizer(AbsTokenizer):
 
         line = "".join(tokens)
         tokens = self.g2p(line)
+        tokens = [t if t is not ' ' else self.space_symbol for t in tokens]
         return tokens
 
     def tokens2text(self, tokens: Iterable[str]) -> str:

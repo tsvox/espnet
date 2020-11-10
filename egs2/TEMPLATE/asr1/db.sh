@@ -2,7 +2,7 @@
 # "downloads" means the corpus can be downloaded by the recipe automatically
 
 AISHELL=downloads
-AN4=downloads
+AN4=/mnt/dl/an4/
 WSJ0=
 WSJ1=
 WSJCAM0=
@@ -22,7 +22,7 @@ CSJVER=dvd  ## Set your CSJ format (dvd or usb).
 CSMSC=downloads
 HKUST1=
 HKUST2=
-LIBRISPEECH=
+LIBRISPEECH=/mnt/dl/LibriSpeech
 LJSPEECH=downloads
 JSSS=downloads
 JSUT=downloads

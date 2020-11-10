@@ -256,7 +256,15 @@ fi
 [ -z "${lm_test_text}" ] && lm_test_text="${data_feats}/${test_sets%% *}/text"
 
 # Check tokenization type
-token_listdir=data/token_list
+token_listdir="data/token_list/${token_type}"
+if [ "${cleaner}" != none ]; then
+    token_listdir+="_${cleaner}"
+fi
+if [ "${token_type}" = phn ]; then
+    token_listdir+="_${g2p}"
+fi
+wordtoken_list="${token_listdir}"/word/tokens.txt
+
 bpedir="${token_listdir}/bpe_${bpemode}${nbpe}"
 bpeprefix="${bpedir}"/bpe
 bpemodel="${bpeprefix}".model
@@ -264,10 +272,12 @@ bpetoken_list="${bpedir}"/tokens.txt
 chartoken_list="${token_listdir}"/char/tokens.txt
 # NOTE: keep for future development.
 # shellcheck disable=SC2034
-wordtoken_list="${token_listdir}"/word/tokens.txt
 
 if [ "${token_type}" = bpe ]; then
     token_list="${bpetoken_list}"
+elif [ "${token_type}" = phn ]; then
+    token_list="${token_listdir}/tokens.txt"
+    bpemodel=none
 elif [ "${token_type}" = char ]; then
     token_list="${chartoken_list}"
     bpemodel=none
@@ -581,9 +591,8 @@ if ! "${skip_data_prep}"; then
             echo "${sos_eos}"
             } > "${token_list}"
 
-        elif [ "${token_type}" = char ]; then
-            log "Stage 5: Generate character level token_list from ${lm_train_text}"
-
+        elif [ "${token_type}" = char ] || [ "${token_type}" = phn ]; then
+            log "Stage 5: Generate token_list from ${data_feats}/srctexts"
             _opts="--non_linguistic_symbols ${nlsyms_txt}"
 
             # The first symbol in token_list must be "<blank>" and the last must be also sos/eos:
@@ -1138,7 +1147,7 @@ if ! "${skip_eval}"; then
 
     if [ ${stage} -le 12 ] && [ ${stop_stage} -ge 12 ]; then
         log "Stage 12: Scoring"
-        if [ "${token_type}" = pnh ]; then
+        if [ "${token_type}" = phn ]; then
             log "Error: Not implemented for token_type=phn"
             exit 1
         fi
